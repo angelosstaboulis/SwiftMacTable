@@ -6,20 +6,15 @@
 //
 
 import SwiftUI
-struct UserData:Identifiable,Equatable{
-    let id = UUID()
-    var lastname: String
-    var firstname:String
-    var address:String
-    var phone:String
-}
+
 struct ContentView: View {
-    @State private var user=[UserData(lastname: "Papadopoulos",firstname:"George",address: "Gorogpotamou 1", phone: "2531029354"),UserData(lastname: "Georgiou",firstname:"Theodoros",address: "Γ.Μαμέλη 1", phone: "2531027353")]
     @State private var selection = Set<UserData.ID>()
     @State private var isPresented = false
     @State var selectionUser:UserData
+    @StateObject var viewModel = UserDataViewModel()
+    @State var userArray:[UserData] = []
     var body: some View {
-        Table(user,selection: $selection){
+        Table(userArray,selection: $selection){
             TableColumn("Record"){record in
                 HStack(alignment:.firstTextBaseline, content: {
                     Text(record.lastname).frame(maxWidth:.infinity)
@@ -37,14 +32,16 @@ struct ContentView: View {
         }.popover(isPresented: $isPresented) {
             AlertView(selection: $selectionUser, selected: $isPresented)
 
+        }.onAppear {
+            userArray.append(contentsOf:viewModel.getUserData())
         }
 
     }
     func checkUUID(uuid:String)->UserData?{
         var getUser = UserData(lastname: "", firstname: "", address:"", phone: "")
-        for item in 0..<user.count{
-            if user[item].id.uuidString == uuid {
-                getUser = user[item]
+        for item in 0..<userArray.count{
+            if userArray[item].id.uuidString == uuid {
+                getUser = userArray[item]
                 return getUser
             }
         }
