@@ -25,26 +25,24 @@ struct ContentView: View {
             }
     
         }.onReceive(selection.publisher) { output in
-            selectionUser = checkUUID(uuid: output.uuidString)!
+            selectionUser = checkUUID(uuid: output.hashValue)!
             if selectionUser.lastname.count > 0 {
-                isPresented = true
+                    isPresented = true
             }
         }.popover(isPresented: $isPresented) {
             AlertView(selection: $selectionUser, selected: $isPresented)
 
         }.onAppear {
-            userArray.append(contentsOf:viewModel.getUserData())
+           
+                userArray.append(contentsOf:viewModel.getUserData())
+            
         }
 
     }
-    func checkUUID(uuid:String)->UserData?{
+    func checkUUID(uuid:Int)->UserData?{
         var getUser = UserData(lastname: "", firstname: "", address:"", phone: "")
-        for item in 0..<userArray.count{
-            if userArray[item].id.uuidString == uuid {
-                getUser = userArray[item]
-                return getUser
-            }
-        }
+        let newArray = userArray.filter{$0.id.hashValue == uuid}
+        getUser = newArray.last!
         return getUser
     }
 }

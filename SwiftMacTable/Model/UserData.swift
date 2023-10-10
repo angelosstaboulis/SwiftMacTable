@@ -6,8 +6,11 @@
 //
 
 import Foundation
-struct UserData:Identifiable,Equatable{
-    let id = UUID()
+struct IDData<T>:Equatable,Hashable{
+    private let id = UUID()
+}
+struct UserData:Identifiable{
+    let id = IDData<Self>()
     var lastname: String
     var firstname:String
     var address:String

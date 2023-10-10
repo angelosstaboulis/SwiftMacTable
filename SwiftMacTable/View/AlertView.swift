@@ -31,6 +31,7 @@ struct AlertView: View {
                 }.frame(width: 300, height: 60, alignment: .center)
 
             }.frame(width:600,height:470)
+          
     }
 }
 
